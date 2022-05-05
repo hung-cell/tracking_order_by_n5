@@ -26,22 +26,31 @@ public class TaskService {
     @ResponseStatus(HttpStatus.OK)
     public OrderResponse getOrdersByCode(@PathVariable String code){
         OrderResponse orderResponse = orderServiceClient.getOrdersByCode(code);
-        User user = new User("Danhkuto", "Danhkuto");
-        MailDTO mailDTO = new MailDTO();
-        mailDTO.setRecipient("tranhiep0308@gmail.com");
-        mailDTO.setSubject("Subject");
-        mailDTO.setContent("Content");
-
-        MailClient mailClient = new MailClient(user, mailDTO);
-        mailClient.sendMail();
+        sendMail(orderResponse);
         return orderResponse;
     }
+
 
 
     @GetMapping("/order/get_order_detail/{id}")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDetailResponse> getOrderDetail(@PathVariable long id) {
         return orderServiceClient.getOrderServices(id);
+    }
+
+
+
+
+
+
+    private void sendMail(OrderResponse orderResponse) {
+        User user = new User("Danhkuto", "Danhkuto");
+        MailDTO mailDTO = new MailDTO();
+        mailDTO.setRecipient("tranhiep0308@gmail.com");
+        mailDTO.setSubject("Mail from n5");
+        mailDTO.setContent("Đơn hàng " + orderResponse.getCode() + "đã được kiểm tra");
+        MailClient mailClient = new MailClient(user, mailDTO);
+        mailClient.sendMail();
     }
 }
 
