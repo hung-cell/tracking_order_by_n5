@@ -19,33 +19,16 @@ public class TaskService {
     private final OrderServiceClient orderServiceClient;
 
 
-    @GetMapping("/{code}")
+    @GetMapping("/order/{code}")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> getOrdersByCode(@PathVariable String code){
-
-        List<OrderResponse> orderByCode = orderServiceClient.getOrderByCode(code);
-
-//        // Dang nhap de lay token
-//        Map<String, UserToSendInRequest> body = new HashMap<>();
-//        UserToSendInRequest userToSendRequest = new UserToSendInRequest(new User("Danhkuto","Danhkuto"));
-//        body.put("user", userToSendRequest);
-//        AuthToken authToken = tokenService.getAuthToken(body);
-//
-//        // Dung token de gui mail
-//        Map<String, EmailToSendInRequest> bodyEmail = new HashMap<>();
-//        EmailToSendInRequest emailToSendInRequest = new EmailToSendInRequest();
-//        Email email = new Email("daoquanghung922@gmail.com","Test Email","day la email content");
-//        emailToSendInRequest.setEmail(email);
-//        bodyEmail.put("mail",emailToSendInRequest);
-//        Email emailResponse = sendEmailClientService.sendEmail(authToken.getAuth_token(),bodyEmail);
-
-
-        return orderByCode;
+    public OrderResponse getOrdersByCode(@PathVariable String code){
+        return orderServiceClient.getOrdersByCode(code);
     }
+
+
     @GetMapping("/order/get_order_detail/{id}")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDetailResponse> getOrderDetail(@PathVariable long id) {
-
         return orderServiceClient.getOrderServices(id);
     }
 }

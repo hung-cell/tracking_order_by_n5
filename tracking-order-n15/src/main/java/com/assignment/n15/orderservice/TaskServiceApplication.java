@@ -18,13 +18,5 @@ public class TaskServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(TaskServiceApplication.class, args);
     }
-//    @Bean
-//    public RequestInterceptor requestTokenBearerInterceptor() {
-//        return requestTemplate -> {
-//            JwtAuthenticationToken token = (JwtAuthenticationToken) SecurityContextHolder.getContext()
-//                    .getAuthentication();
-//
-//            requestTemplate.header("Authorization", "Bearer " + token.getToken().getTokenValue());
-//        };
-//    }
+
 }

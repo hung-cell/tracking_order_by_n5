@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/order")
@@ -21,8 +22,8 @@ public class OrderController {
     private final OrderDetailServiceClient orderDetailServiceClient;
     @GetMapping("/{code}")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> getOrdersByCode(@PathVariable String code){
-        return orderservice.getAllOrderByCode(code);
+    public OrderResponse getOrdersByCode(@PathVariable String code){
+        return orderservice.getOrderByCode(code);
     }
 
     @GetMapping("/get_order_detail/{id}")

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,9 +18,9 @@ public class OrderService {
 
     private final IOrderRepository orderRepository;
 
-    public List<OrderResponse> getAllOrderByCode(String code){
-        List<Order> orders =  orderRepository.findOrderByCode(code);
-        return orders.stream().map(this::mapToOrderResponse).collect(Collectors.toList());
+    public OrderResponse getOrderByCode(String code){
+        Optional<Order> order =  orderRepository.findOrderByCode(code);
+        return mapToOrderResponse(order.get());
     }
 
     private OrderResponse mapToOrderResponse(Order order) {
