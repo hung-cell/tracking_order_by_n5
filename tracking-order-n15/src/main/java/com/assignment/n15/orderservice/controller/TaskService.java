@@ -1,6 +1,7 @@
 package com.assignment.n15.orderservice.controller;
 
 
+import com.assignment.n15.orderservice.client.MailClient;
 import com.assignment.n15.orderservice.client.OrderServiceClient;
 import com.assignment.n15.orderservice.dto.OrderDetailResponse;
 import com.assignment.n15.orderservice.dto.OrderResponse;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import com.assignment.n15.orderservice.model.*;
 
 import java.util.List;
 
@@ -22,7 +25,16 @@ public class TaskService {
     @GetMapping("/order/{code}")
     @ResponseStatus(HttpStatus.OK)
     public OrderResponse getOrdersByCode(@PathVariable String code){
-        return orderServiceClient.getOrdersByCode(code);
+        OrderResponse orderResponse = orderServiceClient.getOrdersByCode(code);
+        User user = new User("Danhkuto", "Danhkuto");
+        MailDTO mailDTO = new MailDTO();
+        mailDTO.setRecipient("tranhiep0308@gmail.com");
+        mailDTO.setSubject("Subject");
+        mailDTO.setContent("Content");
+
+        MailClient mailClient = new MailClient(user, mailDTO);
+        mailClient.sendMail();
+        return orderResponse;
     }
 
 
