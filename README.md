@@ -1,4 +1,4 @@
-# Đây là dự án tracking order phục vụ việc theo dõi tình trạng đơn hàng.
+# Đây là dự án tracking order cung cấp dịch vụ phục vụ việc theo dõi tình trạng đơn hàng.
 ### Đầu tiên, bạn phải có một server KEYCLOAK để tạo một server phân quyền,
         Link tải KEYCLOAK: [Download](https://www.keycloak.org/archive/downloads-12.0.4.html)
         Hướng dẫn cấu hình KeyCloak cho spring boot:
