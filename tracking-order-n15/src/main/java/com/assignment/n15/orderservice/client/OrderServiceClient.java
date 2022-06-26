@@ -14,6 +14,5 @@ public interface OrderServiceClient {
     @GetMapping("/api/order/{code}")
     OrderResponse getOrdersByCode(@PathVariable String code);
 
-    @GetMapping("/api/order/get_order_detail/{id}")
-    List<OrderDetailResponse> getOrderServices(@PathVariable long id);
+
 }

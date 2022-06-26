@@ -2,17 +2,22 @@ package com.assignment.n15.orderservice.controller;
 
 
 import com.assignment.n15.orderservice.client.MailClient;
+import com.assignment.n15.orderservice.client.OrderDetailServiceClient;
 import com.assignment.n15.orderservice.client.OrderServiceClient;
 import com.assignment.n15.orderservice.dto.OrderDetailResponse;
 import com.assignment.n15.orderservice.dto.OrderResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.criterion.Order;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.assignment.n15.orderservice.model.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 @RequestMapping("/api/task-service")
@@ -20,37 +25,38 @@ import java.util.List;
 @RefreshScope
 public class TaskService {
     private final OrderServiceClient orderServiceClient;
-
-
-    @GetMapping("/order/{code}")
+    private final OrderDetailServiceClient orderDetailServiceClient;
+    @GetMapping("/get_order_detail/{code}")
     @ResponseStatus(HttpStatus.OK)
-    public OrderResponse getOrdersByCode(@PathVariable String code){
-        OrderResponse orderResponse = orderServiceClient.getOrdersByCode(code);
-        sendMail(orderResponse);
-        return orderResponse;
-    }
+    public SseEmitter start(@PathVariable String code){
+        SseEmitter emitter = new SseEmitter();
+        ExecutorService sseMvcExecutor = Executors.newSingleThreadExecutor();
+        sseMvcExecutor.execute(() -> {
 
+            try {
+                List<OrderDetailResponse> orderDetailByOrderNumber = null;
+                OrderResponse orderResponse = null;
+                orderResponse = orderServiceClient.getOrdersByCode(code);
+                if (orderResponse == null){
+                    emitter.send(false);
+                    Thread.sleep(1000);
+                }
+                else{
+                    emitter.send("true");
+                    Thread.sleep(1000);
+                    orderDetailByOrderNumber =
+                            orderDetailServiceClient.getOrderDetailByOrderNumber(orderResponse.getId());
+                    emitter.send("true");
+                    Thread.sleep(1000);
 
-
-    @GetMapping("/order/get_order_detail/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderDetailResponse> getOrderDetail(@PathVariable long id) {
-        return orderServiceClient.getOrderServices(id);
-    }
-
-
-
-
-
-
-    private void sendMail(OrderResponse orderResponse) {
-        User user = new User("Danhkuto", "Danhkuto");
-        MailDTO mailDTO = new MailDTO();
-        mailDTO.setRecipient("tranhiep0308@gmail.com");
-        mailDTO.setSubject("Mail from n5");
-        mailDTO.setContent("Đơn hàng " + orderResponse.getCode() + "đã được kiểm tra");
-        MailClient mailClient = new MailClient(user, mailDTO);
-        mailClient.sendMail();
+                    emitter.send(orderDetailByOrderNumber);
+                }
+                emitter.complete();
+            } catch (Exception ex) {
+                emitter.completeWithError(ex);
+            }
+        });
+        return emitter;
     }
 }
 
