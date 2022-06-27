@@ -37,9 +37,9 @@ public class TaskService {
                 List<OrderDetailResponse> orderDetailByOrderNumber = null;
                 OrderResponse orderResponse = null;
                 orderResponse = orderServiceClient.getOrdersByCode(code);
+                Thread.sleep(1000);
                 if (orderResponse == null){
                     emitter.send(false);
-                    Thread.sleep(1000);
                 }
                 else{
                     emitter.send("true");
