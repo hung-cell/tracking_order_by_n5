@@ -20,7 +20,9 @@ public class OrderService {
 
     public OrderResponse getOrderByCode(String code){
         Optional<Order> order =  orderRepository.findOrderByCode(code);
-        return mapToOrderResponse(order.get());
+        if(order.isPresent())
+            return mapToOrderResponse(order.get());
+        else return null;
     }
 
     private OrderResponse mapToOrderResponse(Order order) {
