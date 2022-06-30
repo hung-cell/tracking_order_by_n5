@@ -53,12 +53,14 @@ public class TaskService {
                     emitter.send("true");
                     Thread.sleep(1000);
 
-                    emitter.send(orderDetailByOrderNumber);
-
                     // send mail and telegram message
                     sendMail(orderResponse);
                     sendMessageByTelegram("You checked you order at "
                             + LocalDateTime.now());
+                    emitter.send("true");
+                    Thread.sleep(1000);
+
+                    emitter.send(orderDetailByOrderNumber);
                 }
                 emitter.complete();
             } catch (Exception ex) {
